@@ -6,7 +6,7 @@ namespace PreNet_3.Services
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
-        private readonly IBookRepository _bookRepository; 
+        private readonly IBookRepository _bookRepository;
 
         public AuthorService(IAuthorRepository authorRepository, IBookRepository bookRepository)
         {
@@ -52,12 +52,26 @@ namespace PreNet_3.Services
             if (author == null)
                 throw new KeyNotFoundException("Автор не найден.");
 
-           
+
             var hasBooks = (await _bookRepository.GetAllAsync()).Any(b => b.AuthorId == id);
             if (hasBooks)
                 throw new InvalidOperationException("Нельзя удалить автора, у которого есть книги.");
 
             await _authorRepository.DeleteAsync(id);
         }
+
+        public async Task<IEnumerable<object>> GetAuthorsWithBookCountAsync()
+        {
+            return await _authorRepository.GetAuthorsWithBookCountAsync();
+        }
+
+        public async Task<IEnumerable<Author>> FindAuthorsByNameAsync(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Имя для поиска не может быть пустым.");
+
+            return await _authorRepository.FindAuthorsByNameAsync(name);
+        }
+
     }
 }

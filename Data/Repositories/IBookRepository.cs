@@ -9,5 +9,11 @@ namespace PreNet_3.Data.Repositories
         Task AddAsync(Book book);
         Task UpdateAsync(Book book);
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<Book>> GetBooksPublishedAfterYearAsync(int year);
+        Task<IEnumerable<object>> GetBooksWithAuthorInfoAsync();
+        Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId);
+        Task<IEnumerable<Book>> GetBooksOrderedByYearAsync(bool descending = false);
+        Task<object> GetBooksStatisticsAsync();
     }
 }

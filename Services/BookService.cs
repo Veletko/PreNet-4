@@ -62,5 +62,23 @@ namespace PreNet_3.Services
 
             await _bookRepository.DeleteAsync(id);
         }
+
+        public async Task<IEnumerable<Book>> GetBooksPublishedAfterYearAsync(int year)
+        {
+            if (year < 0 || year > DateTime.Now.Year + 5)
+                throw new ArgumentException("Некорректный год.");
+
+            return await _bookRepository.GetBooksPublishedAfterYearAsync(year);
+        }
+
+        public async Task<IEnumerable<object>> GetBooksWithAuthorInfoAsync()
+        {
+            return await _bookRepository.GetBooksWithAuthorInfoAsync();
+        }
+
+        public async Task<object> GetBooksStatisticsAsync()
+        {
+            return await _bookRepository.GetBooksStatisticsAsync();
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PreNet_3.Data;
 using PreNet_3.Models;
 using PreNet_3.Services;
 
@@ -80,6 +79,34 @@ namespace PreNet_3.Controllers
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { error = ex.Message, statusCode = 400 });
+            }
+        }
+
+        [HttpGet("with-book-count")]
+        public async Task<ActionResult> GetAuthorsWithBookCount()
+        {
+            try
+            {
+                var authors = await _authorService.GetAuthorsWithBookCountAsync();
+                return Ok(authors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("search/{name}")]
+        public async Task<ActionResult> SearchAuthors(string name)
+        {
+            try
+            {
+                var authors = await _authorService.FindAuthorsByNameAsync(name);
+                return Ok(authors);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

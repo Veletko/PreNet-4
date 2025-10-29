@@ -9,5 +9,7 @@ namespace PreNet_3.Services
         Task<Author> CreateAuthorAsync(Author author);
         Task UpdateAuthorAsync(int id, Author updatedAuthor);
         Task DeleteAuthorAsync(int id);
+        Task<IEnumerable<object>> GetAuthorsWithBookCountAsync();
+        Task<IEnumerable<Author>> FindAuthorsByNameAsync(string name);
     }
 }

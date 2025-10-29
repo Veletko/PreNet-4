@@ -9,5 +9,8 @@ namespace PreNet_3.Data.Repositories
         Task AddAsync(Author author);
         Task UpdateAsync(Author author);
         Task DeleteAsync(int id);
+        Task<IEnumerable<object>> GetAuthorsWithBookCountAsync();
+        Task<IEnumerable<Author>> FindAuthorsByNameAsync(string name);
+        Task<IEnumerable<Author>> GetAuthorsWithMoreThanNBooksAsync(int bookCount);
     }
 }

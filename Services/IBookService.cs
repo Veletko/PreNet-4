@@ -9,5 +9,8 @@ namespace PreNet_3.Services
         Task<Book> CreateBookAsync(Book book);
         Task UpdateBookAsync(int id, Book updatedBook);
         Task DeleteBookAsync(int id);
+        Task<IEnumerable<Book>> GetBooksPublishedAfterYearAsync(int year);
+        Task<IEnumerable<object>> GetBooksWithAuthorInfoAsync();
+        Task<object> GetBooksStatisticsAsync();
     }
 }

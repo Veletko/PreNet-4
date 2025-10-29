@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PreNet_3.Data;
 using PreNet_3.Models;
 using PreNet_3.Services;
 
@@ -80,6 +79,48 @@ namespace PreNet_3.Controllers
             catch (KeyNotFoundException)
             {
                 return NotFound();
+            }
+        }
+
+        [HttpGet("published-after/{year}")]
+        public async Task<ActionResult> GetBooksPublishedAfter(int year)
+        {
+            try
+            {
+                var books = await _bookService.GetBooksPublishedAfterYearAsync(year);
+                return Ok(books);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("with-author-info")]
+        public async Task<ActionResult> GetBooksWithAuthorInfo()
+        {
+            try
+            {
+                var books = await _bookService.GetBooksWithAuthorInfoAsync();
+                return Ok(books);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("statistics")]
+        public async Task<ActionResult> GetBooksStatistics()
+        {
+            try
+            {
+                var stats = await _bookService.GetBooksStatisticsAsync();
+                return Ok(stats);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

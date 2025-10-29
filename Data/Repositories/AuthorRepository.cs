@@ -1,52 +1,74 @@
-﻿using PreNet_3.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PreNet_3.Models;
 
 namespace PreNet_3.Data.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        private readonly InMemoryDataStore _dataStore;
+        private readonly LibraryContext _context;
 
-        public AuthorRepository(InMemoryDataStore dataStore)
+        public AuthorRepository(LibraryContext context)
         {
-            _dataStore = dataStore;
+            _context = context;
         }
 
         public async Task<IEnumerable<Author>> GetAllAsync()
         {
-            return await Task.FromResult(_dataStore.Authors);
+            return await _context.Authors.ToListAsync();
         }
 
         public async Task<Author?> GetByIdAsync(int id)
         {
-            return await Task.FromResult(_dataStore.Authors.Find(x => x.Id == id));
+            return await _context.Authors.FindAsync(id);
         }
 
         public async Task AddAsync(Author author)
         {
-            author.Id = _dataStore.Authors.Any() ? _dataStore.Authors.Max(a => a.Id) + 1 : 1;
-            _dataStore.Authors.Add(author);
-            await Task.CompletedTask;
+            await _context.Authors.AddAsync(author);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Author updatedAuthor)
         {
-            var author = _dataStore.Authors.Find(a => a.Id == updatedAuthor.Id);
-            if (author != null)
-            {
-                author.Name = updatedAuthor.Name;
-                author.DateOfBirth = updatedAuthor.DateOfBirth;
-            }
-            await Task.CompletedTask;
+            _context.Authors.Update(updatedAuthor);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var author = _dataStore.Authors.Find(a => a.Id == id);
+            var author = await _context.Authors.FindAsync(id);
             if (author != null)
             {
-                _dataStore.Authors.Remove(author);
+                _context.Authors.Remove(author);
+                await _context.SaveChangesAsync();
             }
-            await Task.CompletedTask;
+        }
+
+        public async Task<IEnumerable<object>> GetAuthorsWithBookCountAsync()
+        {
+            return await _context.Authors
+                .Select(a => new
+                {
+                    AuthorId = a.Id,
+                    AuthorName = a.Name,
+                    DateOfBirth = a.DateOfBirth,
+                    BookCount = a.Books.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Author>> FindAuthorsByNameAsync(string name)
+        {
+            return await _context.Authors
+                .Where(a => a.Name.Contains(name))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Author>> GetAuthorsWithMoreThanNBooksAsync(int bookCount)
+        {
+            return await _context.Authors
+                .Where(a => a.Books.Count > bookCount)
+                .ToListAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PreNet_3.Models
 {
@@ -13,5 +14,7 @@ namespace PreNet_3.Models
         [Required(ErrorMessage = "Дата рождения обязательна")]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
+        public virtual ICollection<Book> Books { get;} = new List<Book>();
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PreNet_3.Models
 {
@@ -9,9 +11,12 @@ namespace PreNet_3.Models
         [Required(ErrorMessage = "Название книги обязательно")]
         [StringLength(200, ErrorMessage = "Название книги не может превышать 200 символов")]
         public string Title { get; set; } = string.Empty;
+
         public int PublishedYear { get; set; }
 
         [Required(ErrorMessage = "AuthorId обязателен")]
         public int AuthorId { get; set; }
+        [JsonIgnore]
+        public virtual Author? Author { get; set; }
     }
 }
